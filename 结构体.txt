@@ -1,0 +1,110 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#include<math.h>
+
+struct student
+{
+    char name;
+    int year;
+    int month;
+    int day;
+};
+typedef struct student ss;//起一个别名
+void swap(ss p,ss q)// 函数 
+{ 
+    ss temp = p;
+    p=q;
+    q=temp;
+}
+
+int main()
+{
+    int n,i;
+    scanf("%d",&n);
+    ss* p=(ss*)malloc(sizeof(ss)*n);
+    for(i=0;i<n;++i)
+    {
+        scanf("%s%d%d%d",&p[i].name,&p[i].year,&p[i].month,&p[i].day);
+        
+    }
+    for(i=0;i<n;++i)//先比较年 
+    {
+        if(p[i].year==p[i+1].year)
+        {
+            if(p[i].month>p[i+1].month)
+            {
+                swap(p[i],p[i+1]);
+                
+//                ss tmp = p[i];
+//                p[i]=p[i+1];
+//                p[i+1]=tmp;
+            }
+            if(p[i].month==p[i+1].month)
+            {
+                if(p[i].day>=p[i+1].day)
+                {
+                    swap(p[i],p[i+1]);
+//                    ss t = p[i];
+//                       p[i]=p[i+1];
+//                       p[i+1]=t;
+                } 
+            }
+        }
+        else if(p[i].year>=p[i+1].year)
+        {
+//             ss tmp = p[i];
+//              p[i]=p[i+1];
+//             p[i+1]=tmp;
+swap(p[i],p[i+1]);
+        }
+    }
+    for(i=0;i<n;++i)
+    {
+        printf("%s",&p[i].name);
+        
+        printf("\n");
+    }
+    
+   return 0;
+}
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#include<math.h>
+struct scores//结构体的嵌套
+{
+    int math;
+    int chinese;
+    int english;
+    
+};
+struct student//结构体的定义与使用 
+{
+    char name[21];
+    int age;
+    struct scores ss;
+    char addr[51];
+};
+
+/pedef struct student ss;
+int main()
+{
+//    ss* p=(ss*)malloc(sizeof(ss)*3);
+//    for(int i=0;i<3;++i)
+//    {
+//        scanf("%s%d%d%s",p[i].name,
+//        &p[i].age,&p[i].score,p[i].addr);
+//    }
+struct student stu={"田硕",19,100,100,100,"山东"};
+
+   
+     printf("姓名：%s\n",stu.name);  
+           printf("年龄：%d\n",stu.age);
+         printf("数学分数：%d\n",stu.ss.math);
+         printf("语文分数：%d\n",stu.ss.chinese);
+         printf("英语分数：%d\n",stu.ss.english);
+         printf("家庭住址:%s\n",stu.addr);
+
+   return 0;
+}
