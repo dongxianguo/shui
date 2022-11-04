@@ -1,0 +1,50 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#include<math.h>
+int main()
+{
+//    FILE* fp=fopen("C:/Users/董现国/Desktop/xie.txt","r");
+//    char ch;
+//    if(!fp)
+//    {
+//        return -1;
+//    }
+//    ch=fgetc(fp);
+//    printf("%c",ch);
+//    while((ch=fgetc(fp))!=EOF)//提取字符 
+//    {
+//        printf("%c",ch);
+//   }
+    // FILE* fp=fopen("C:/Users/董现国/Desktop/xie.txt","w");
+     //以写的方式打开文件 ，如果文件不存在，会创建一个文件；
+     //文件存在会清除之前的文件； 
+//     char ch='a';
+//     fputc(ch,fp);
+       char ch;
+//       while(1)//向文件中写入字符； 
+//       {
+//           scanf("%c",&ch);
+//           fputc(ch,fp);
+//           if(ch=='@')
+//           break; 
+//       }
+//         FILE* fp1=fopen("C:/Users/董现国/Desktop/xie.txt","r");
+//         FILE* fp2=fopen("C:/Users/董现国/Desktop/jiemi.txt","w");
+//         
+//         while((ch=fgetc(fp1))!=EOF)//文件加密 
+//         {
+//          ch--;
+//          fputc(ch,fp2);   
+//         }
+//         
+//    fclose(fp1) ;
+//    fclose(fp2) ;
+   FILE* fp=fopen("C:/Users/董现国/Desktop/xie.txt","r");
+   char * p=(char*)malloc(sizeof(int*)*100);
+   memset(p,0,100);//重置数组
+   fgets(p,100,fp);//输出一行字符； 
+   printf("%s\n",p);
+    fclose(fp);
+   return 0;
+}
