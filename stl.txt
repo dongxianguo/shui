@@ -1,0 +1,46 @@
+//#include<iostream>
+//using namespace std;
+//#include<algorithm>
+//int main()
+//{
+//    int a[]={1,6,2,4,5,7,5};
+//    ///sort(a,a+3);//从小到大排
+//    sort(a,a+3,greater<int>());//从大到小排 
+//     
+//    for(int i=0;i<7;++i)
+//    {
+//        cout<<a[i]<<endl;
+//    }
+//   return 0;
+//}
+//#include<iostream>//meltiset存储器
+//using namespace std;
+//#include<set>
+//#include<cstring>
+//int main()
+//{
+//    multiset<int> st;
+//    int a[10]={1,14,12,13,7,13,21,19,8,8};
+//    for(int i=0;i<10;++i)
+//        st.insert(a[i]);//是a[i]的复制品，容器中已排好序 
+//          multiset<int>::iterator i;//迭代器 用于遍历 容器中的数据 
+//                 //迭代器类似于指针
+//                 st.erase(12);//删除一个元素 
+//         for(i=st.begin();i!=st.end();++i)
+//         {
+//             cout<<*i<<",";
+//         }  
+//         int n;
+//         scanf("%d",&n);
+//         i=st.find(n);//查找22返回值为迭代器不是找数学中的等于 
+//         i=st.lower_bound(13);//找到下界 
+//         cout<<*i;
+//         i=st.upper_bound(8);//找上界 
+//         cout<<*i;
+//         if(i==st.end())
+//         {
+//           cout<<"nofound"<<endl;  
+//         }      
+//         
+//   return 0;
+//}
