@@ -1,0 +1,474 @@
+#include<iostream>
+#include<ctime>
+#include<stdlib.h>
+#include<conio.h>
+#include<fstream>
+#define x 4
+#define y 4
+int grid[4][4] = { 0 };
+int Size, i, j;//尺寸
+int game_over();//判断游戏是否结束
+int now_score;
+char name[51] = { 0 };
+char read_file;
+int best_score;
+using namespace std;
+void move_right();
+void move_left();
+void move_up();
+void move_down();
+void start_game();
+void get_rand_number();
+void set_game();
+int zero_number();
+void fresh_show();
+void preserve_former_game();
+void preserve_now_game();
+void return_former_game();
+void return_now_game();
+void query_history_score();
+int main()
+{
+    start_game();
+    return 0;
+}
+void start_game()
+{
+    cout << "开始新的游戏请按 0，接着玩请按1\n";
+    cin >> read_file;
+    if (read_file == '1')
+    {
+        fstream file;
+        file.open("2048.player.name.text", ios::in);
+        file.getline(name, sizeof(name));
+        file.close();
+        return_now_game();
+        system("cls");
+        fresh_show();
+    }
+    else {
+        system("cls");
+        cout << "请设置您的游戏昵称:" << endl;
+        cin >> name;
+        fstream file;
+        file.open("2048.player.name.text", ios::out);//纪录名字
+        file << name;
+        system("cls");
+        set_game();
+    }
+    char ch;
+    while (1)
+    {
+        int count = 0;
+        ch = getch();
+        switch (ch) {
+        case 'a':
+        case 'A':
+            preserve_former_game();
+            move_left();
+            break;
+        case 'd':
+        case 'D':
+            preserve_former_game();
+            move_right();
+            break;
+        case 'w':
+        case 'W':
+            preserve_former_game();
+            move_up();
+            break;
+        case 's':
+        case 'S':
+            preserve_former_game();
+            move_down();
+            break;
+        case 'r':
+        case 'R':
+            set_game();
+            preserve_former_game();
+            break;
+        case 'c':
+        case 'C':
+            system("cls");
+            query_history_score();
+            break;
+        case 'p':
+        case 'P':
+            return_former_game();
+            system("cls");
+            fresh_show();
+            continue;
+        }
+        preserve_now_game();
+        fstream ifs;
+        ifs.open("2048.score.text", ios::app);
+        ifs << now_score << endl;
+        if (now_score > best_score)
+        {
+            best_score = now_score;
+        }
+        if (game_over() > 1)
+        {
+            if (game_over() == 3)
+            {
+                cout << "You win!";
+                return;
+            }
+            else if (game_over() == 2)
+            {
+                cout << "You False";
+                return;
+            }
+        }
+        system("cls");
+        if (ch != 'r')
+        {
+            get_rand_number();
+        }
+        fresh_show();
+
+    }
+}
+int zero_number() {
+    int n = 0;
+    for (int i = 0; i < x; ++i)
+    {
+        for (j = 0; j < y; ++j)
+        {
+            if (grid[i][j] == 0)
+            {
+                ++n;
+            }
+        }
+    }
+    return n;
+}
+void move_left() {
+    for (i = 0; i < x; i++)
+    {
+        for (j = y - 1; j > 0; j--)
+        {
+            if (grid[i][j] != 0)
+            {
+                if (grid[i][j] == grid[i][j - 1])
+                {
+                    grid[i][j - 1] += grid[i][j];
+                    grid[i][j] = 0;
+                    now_score += 20;
+                    j--;
+                }
+                else if (grid[i][j - 1] == 0)
+                {
+                    grid[i][j - 1] = grid[i][j];
+                    grid[i][j] = 0;
+                }
+            }
+        }
+        for (int k = 0; k < y; ++k)
+        {
+            if (grid[i][k] == 0)
+            {
+                for (j = k + 1; j < y; ++j)
+                {
+                    if (grid[i][j] != 0)
+                    {
+                        grid[i][k] = grid[i][j];
+                        grid[i][j] = 0;
+                        break;
+                    }
+                }
+            }
+        }
+
+    }
+
+}
+void move_right() {
+    for (i = 0; i < x; ++i)
+    {
+        for (j = 0; j < y - 1; ++j)
+        {
+            if (grid[i][j] != 0 && grid[i][j + 1] == grid[i][j])
+            {
+                grid[i][j + 1] += grid[i][j];
+                grid[i][j] = 0;
+                now_score += 20;
+                j++;
+            }
+            else if (grid[i][j] != 0 && grid[i][j + 1] == 0)
+            {
+                grid[i][j + 1] = grid[i][j];
+                grid[i][j] = 0;
+            }
+        }
+        for (int k = y - 1; k > 0; --k)
+        {
+            if (grid[i][k] == 0)
+            {
+                for (j = k - 1; j >= 0; j--)
+                {
+                    if (grid[i][j] != 0)
+                    {
+                        grid[i][k] = grid[i][j];
+                        grid[i][j] = 0;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+}
+void move_down() {
+    for (j = 0; j < y; ++j)
+    {
+        for (i = 0; i < x - 1; i++)
+        {
+            if (grid[i][j] != 0 && grid[i + 1][j] == grid[i][j])
+            {
+                grid[i + 1][j] += grid[i][j];
+                grid[i][j] = 0;
+                now_score += 20;
+                i++;
+            }
+            else if (grid[i][j] != 0 && grid[i + 1][j] == 0)
+            {
+                grid[i + 1][j] = grid[i][j];
+                grid[i][j] = 0;
+            }
+        }
+        for (i = x - 1; i > 0; --i)
+        {
+            if (grid[i][j] == 0)
+            {
+                for (int k = i - 1; k >= 0; k--)
+                {
+                    if (grid[k][j] != 0)
+                    {
+                        grid[i][j] = grid[k][j];
+                        grid[k][j] = 0;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+}
+void move_up() {
+    for (j = 0; j < y; ++j)
+    {
+        for (i = x - 1; i > 0; --i)
+        {
+            if (grid[i][j] != 0 && grid[i - 1][j] == grid[i][j])
+            {
+                grid[i - 1][j] += grid[i][j];
+                grid[i][j] = 0;
+                now_score += 20;
+                i--;
+            }
+            else if (grid[i][j] != 0 && grid[i - 1][j] == 0)
+            {
+                grid[i - 1][j] = grid[i][j];
+                grid[i][j] = 0;
+            }
+        }
+        for (i = 0; i < x; ++i)
+        {
+            if (grid[i][j] == 0)
+            {
+                for (int k = i + 1; k < x; ++k)
+                {
+                    if (grid[k][j] != 0)
+                    {
+                        grid[i][j] = grid[k][j];
+                        grid[k][j] = 0;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+}
+void fresh_show() {
+    cout << "**************2048***************" << endl;
+    cout << "玩家昵称：" << name << "     ";
+    cout << "当前分数：" << now_score << "          ";
+    cout << "最高分数：" << best_score << "         " << endl;
+    for (int i = 0; i < 4; ++i)
+    {
+        cout << "---------------------------------" << endl;
+        for (int j = 0; j < 4; ++j)
+        {
+            if (grid[i][j] == 0)
+                cout << " " << '\t' << '|';
+            else
+                cout << grid[i][j] << '\t' << '|';
+            if (j == 3)
+                cout << endl;
+        }
+    }
+    cout << "---------------------------------" << endl;
+    cout << "w↑ ↓s  a←  →d  r:重置游戏  p:悔棋  c:查看历史分数";
+}
+void set_game() {
+    cout << "2048" << "请输入您的棋盘大小" << endl;
+    cin >> Size;
+    now_score = 0;
+    for (i = 0; i < x; ++i)
+    {
+        for (j = 0; j < y; ++j)
+        {
+            grid[i][j] = 0;
+        }
+    }
+    srand(time(0));
+    int index1 = rand() % 4;
+    int index2 = rand() % 4;
+    int index3, index4;
+    while (1) {
+        index3 = rand() % 4;
+        index4 = rand() % 4;
+        if (index1 != index3 || index2 != index4)
+            break;
+    }
+    int k = rand() % 4;
+    if (k == 0)
+    {
+        grid[index1][index2] = 2;
+        grid[index3][index4] = 4;
+    }
+    else if (k == 1)
+    {
+        grid[index1][index2] = 4;
+        grid[index3][index4] = 4;
+    }
+    else if (k == 2)
+    {
+        grid[index1][index2] = 2;
+        grid[index3][index4] = 2;
+    }
+    else {
+        grid[index1][index2] = 4;
+        grid[index3][index4] = 2;
+    }
+    system("cls");
+    fresh_show();
+}
+void get_rand_number() {
+    srand(time(0));
+    int index1, index2;
+    int k = rand() % 4;
+    while (1)
+    {
+        index1 = rand() % 4;
+        index2 = rand() % 4;
+        if (grid[index1][index2] == 0)
+        {
+            if (k % 2 == 0)
+            {
+                grid[index1][index2] = 2;
+                break;
+            }
+            else
+            {
+                grid[index1][index2] = 4;
+                break;
+            }
+        }
+    }
+
+}
+int game_over() {
+    int flag = 1;
+    for (i = 1; i < x; ++i)
+    {
+        for (j = 1; j < y - 1; ++j)
+        {
+            if (grid[i][j] == grid[i][j + 1]||grid[i][j]==grid[i][j-1]||grid[i-1][j]==grid[i][j]||grid[i][j]==grid[i+1][j])
+            {
+                flag = 2;
+                break;
+            }
+        }
+    }
+    for (i = 0; i < x; ++i)
+    {
+        for (j = 0; j < y - 1; ++j)
+        {
+            if (grid[i][j] == 2048)
+            {
+                flag=3;
+                break;
+            }
+        }
+    }
+    if (zero_number() == 0 && flag == 2)//能移动
+    {
+        return 1;
+    }
+    if (zero_number() == 0 && flag == 3)//
+    {
+        return 3;
+    }
+    else
+        return 2;//不能移动
+}
+void preserve_former_game()
+{
+    fstream file;
+    file.open("2048-former.text", ios::out | ios::binary);
+    file.write((char*)grid, sizeof(grid));
+    file.close();
+}
+void return_former_game() {
+    fstream file;
+    file.open("2048-former.text", ios::in | ios::binary);
+    file.read((char*)grid, sizeof(grid));
+    file.close();
+}
+void preserve_now_game() {
+    fstream file;
+    file.open("2048.Now.text", ios::out | ios::binary);
+    file.write((char*)grid, sizeof(grid));
+    /* file.open("2048.Now.text", ios::out);
+     for (i = 0; i < x; ++i)
+     {
+         for (j = 0; j < y; ++j)
+         {
+             file << sgrid[i][j];
+         }
+     }*/
+    file.close();
+}
+void return_now_game() {
+    fstream file;
+    file.open("2048.Now.text", ios::in | ios::binary);
+    file.read((char*)grid, sizeof(grid));
+    /*file.open("2048-now.text", ios::in);
+
+    file.close();*/
+}
+void query_history_score() {
+    cout << "按f建返回游戏" << endl;
+    char ch;
+    fstream file;
+    file.open("2048.player.name.text", ios::in);
+    file.getline(name, sizeof(name));
+    file.close();
+    cout<<"玩家昵称："<<name;
+    cout << endl;
+    fstream ifs;
+    ifs.open("2048.score.text", ios::in);//分数
+    char buf[1000] = { 0 };
+    while (ifs >> buf)
+    {
+        cout << buf << endl;
+    }
+    ch = getch();
+    if (ch == 'f')
+    {
+        return_now_game();
+        system("cls");
+        fresh_show();
+    }
+}
